@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prateleira</title>
+  <meta charset="UTF-8" />
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .item { padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Itens da Prateleira</h1>
+  <div id="conteudo">Carregando...</div>
+
+  <script>
+    const url = "LINK_DA_SUA_API";
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const prateleira = new URLSearchParams(window.location.search).get('id');
+        const container = document.getElementById("conteudo");
+        const filtrado = data.filter(item => item.prateleira === prateleira);
+
+        if (filtrado.length === 0) {
+          container.innerHTML = <p>Nenhum item encontrado para a prateleira ${prateleira}</p>;
+        }
+
+        filtrado.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML = <strong>${item.item}</strong><br>Linha: ${item.linha}, Coluna: ${item.coluna}<br>Qtd: ${item.quantidade}<br>${item.observacoes};
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById("conteudo").innerText = "Erro ao carregar os dados.";
+      });
+  </script>
+</body>
+</html>
