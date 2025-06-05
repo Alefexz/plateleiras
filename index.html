@@ -27,7 +27,7 @@
   <div id="conteudo">Carregando...</div>
 
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycbxOlV_Jnp3_b7pTAhngk1M4vpazxRyTK5KiPZx8wJ-jERQH__acfDZu9VkKZV8qSBskbg/exec";
+    const apiUrl = "https://script.google.com/macros/s/AKfycbxyGmXLXduHIZA95T3D9R6whNmnyR-3Lmz5DpFeBUKOn-wP4TQIwCmo4N3X8CW3bW34bQ/exec";
 
     function obterParametroUrl(nome) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -47,7 +47,7 @@
           } else {
             let html = "<ul>";
             data.forEach(item => {
-              html += <li><strong>${item.nome}</strong> (coluna: ${item.coluna}, linha: ${item.linha})</li>;
+              html += <li><strong>${item.item}</strong> (coluna: ${item.coluna}, linha: ${item.linha})</li>;
             });
             html += "</ul>";
             document.getElementById("conteudo").innerHTML = html;
