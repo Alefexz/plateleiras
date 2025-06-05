@@ -1,42 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <title>Prateleira</title>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prateleira - Visualização</title>
   <style>
-    body { font-family: Arial; padding: 20px; }
-    .item { padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+    }
+    #conteudo {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      background: white;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
-  <h1>Itens da Prateleira</h1>
+  <h1>Itens da prateleira</h1>
   <div id="conteudo">Carregando...</div>
 
   <script>
-    const url = "LINK_DA_SUA_API";
+    const apiUrl = "https://script.google.com/macros/s/AKfycbxOlV_Jnp3_b7pTAhngk1M4vpazxRyTK5KiPZx8wJ-jERQH__acfDZu9VkKZV8qSBskbg/exec";
 
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        const prateleira = new URLSearchParams(window.location.search).get('id');
-        const container = document.getElementById("conteudo");
-        const filtrado = data.filter(item => item.prateleira === prateleira);
+    function obterParametroUrl(nome) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(nome);
+    }
 
-        if (filtrado.length === 0) {
-          container.innerHTML = <p>Nenhum item encontrado para a prateleira ${prateleira}</p>;
-        }
+    const id = obterParametroUrl("id");
 
-        filtrado.forEach(item => {
-          const div = document.createElement("div");
-          div.className = "item";
-          div.innerHTML = <strong>${item.item}</strong><br>Linha: ${item.linha}, Coluna: ${item.coluna}<br>Qtd: ${item.quantidade}<br>${item.observacoes};
-          container.appendChild(div);
+    if (!id) {
+      document.getElementById("conteudo").innerText = "ID da prateleira não informado na URL.";
+    } else {
+      fetch(${apiUrl}?id=${id})
+        .then(response => response.json())
+        .then(data => {
+          if (data.length === 0) {
+            document.getElementById("conteudo").innerText = "Nenhum item encontrado para esta prateleira.";
+          } else {
+            let html = "<ul>";
+            data.forEach(item => {
+              html += <li><strong>${item.nome}</strong> (coluna: ${item.coluna}, linha: ${item.linha})</li>;
+            });
+            html += "</ul>";
+            document.getElementById("conteudo").innerHTML = html;
+          }
+        })
+        .catch(error => {
+          document.getElementById("conteudo").innerText = "Erro ao carregar dados da prateleira.";
+          console.error(error);
         });
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById("conteudo").innerText = "Erro ao carregar os dados.";
-      });
+    }
   </script>
 </body>
 </html>
